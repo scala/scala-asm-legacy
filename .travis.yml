@@ -1,0 +1,6 @@
+language: scala
+
+script: sbt clean update test publishLocal
+jdk: openjdk6
+notifications:
+  email: lukas.rytz@typesafe.com
