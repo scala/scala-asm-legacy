@@ -1,6 +1,18 @@
 language: scala
 
-script: sbt clean update test publishLocal
+env:
+  global:
+    - PUBLISH_JDK=openjdk6
+    # PGP_PASSPHRASE
+    - secure: "qCcxt4fieoaH8rAZlUQSOXFKlZBl75IPWNRHBOw9dquoRBBw1zY/1gT2CB2ud0R8sVjS68r4f6ChkyL9eZ5KlSSwkZoNUEfP5/+j538wSYKuvkHgrHeV7UlVVOnKHSV+YDEgAO82mIDLub8x9bYfPAEwDEBzHX35tpUTVBexyjY="
+    # SONA_USER
+    - secure: "eFcvks26s0j6dp4m7sJtH6g0DHz1YnekYwhkr8HZU9E23hmbx2J57N+wI+0wDTv6vctgOnPatmjh3Bv/p5wQrj4ThTuA32ARO35mrNQ+ngXCGJxHgMR8c+06ihox8C0LEXpvtj5HdqLdVrwwSHefPsPxdhxkYl/ohiV9prRudMU="
+    # SONA_PASS
+    - secure: "YCrIE3M6wT2AE8nJWRRree+F3RGCxk/roO2YM2VT32DBgJl+2vyI4/kV7kON90vjPG3m3mix7Si7SeGRe40AonMSMzzFaX7k3sL0GN1GC0B3dTmho3s7HCPFC8dLYAsUmR5bJ+LtedgThuPHx4D3CB0xDNT0R6zxv2+dkScgxjw="
+
+script: admin/build.sh
+
 jdk: openjdk6
+
 notifications:
   email: lukas.rytz@typesafe.com
