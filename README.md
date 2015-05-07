@@ -9,6 +9,9 @@ The package name is changed to `scala.tools.asm`.
 There is a small number of other patches applied to the original sources.
 Note that this fork only contains a subset of the source files of the ASM repository.
 
+Longer-term, we plan to retire this fork and move to stock ASM.
+See [issue #4](https://github.com/scala/scala-asm/issues/4) for details.
+
 ## Keeping in Synch
 
 When upgrading to a new ASM release, we always import the unmodified source files and re-apply all our patches on top.
