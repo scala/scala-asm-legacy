@@ -1,14 +1,19 @@
 scalaModuleSettings
 
-name         := "scala-asm"
+name := "scala-asm"
 
-version      := "5.0.3-scala-2"
+version := "5.0.3-scala-3"
 
 // Otherwise the artifact has a dependency on scala-library
 autoScalaLibrary := false
 
 // Don't add `_<scala-version>` to the jar file name - it's a Java-only project, no Scala cross-versioning needed
-crossPaths   := false
+crossPaths := false
+
+javacOptions ++= Seq("-g", "-source", "1.5", "-target", "1.6")
+
+// javadoc fails if we pass all of the above
+javacOptions in doc := Seq("-source", "1.5")
 
 scalaModuleOsgiSettings
 
