@@ -33,6 +33,12 @@ The original ASM sources are in an SVN repository, which is mirrored here: https
 You can use this mirror, your own git-svn mirror, or the original SVN repository to grab the sources of a new ASM version.
 A description how to work with the git-svn clone is here: https://github.com/lrytz/asm/issues/1.
 
+Excluded Files (don't copy):
+  * `package.html` files
+  * `org/objectweb/asm/commons`, but keep `CodeSizeEvaluator.java`
+  * `org/objectweb/asm/optimizer`
+  * `org/objectweb/asm/xml`
+
 *The below will change once a first is done in the new `scala/scala-asm` repository.*
 *In the new repository, it probably makes sense to only squash the "Re-packaging and cosmetic changes".*
 *The "actual changes" can then stay in the commit history.*
@@ -40,12 +46,6 @@ A description how to work with the git-svn clone is here: https://github.com/lry
 Check the commit history of `src/asm`: https://github.com/scala/scala/commits/2.11.x/src/asm.
 Find the previous commit that upgraded ASM and take a look at its commit message.
 It should be a squashed version of a pull request that shows the precise procedure how the last upgrade was made.
-
-Excluded Files (don't copy):
-  * `package.html` files
-  * `org/objectweb/asm/commons`, but keep `CodeSizeEvaluator.java`
-  * `org/objectweb/asm/optimizer`
-  * `org/objectweb/asm/xml`
 
 Re-packaging and cosmetic changes:
   * convert line endings (there are some `CRLF`)  
