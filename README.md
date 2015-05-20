@@ -19,7 +19,7 @@ This makes it easy to see how our fork differs from the official release.
 
 ## Current Version
 
-The current sources are based on the following version of ASM ([browse tags here](http://websvn.ow2.org/listing.php?repname=asm&path=%2Ftags%2F&rev=1748&peg=1748)):
+The current sources are based on the following version of ASM ([browse tags here](http://websvn.ow2.org/listing.php?repname=asm&path=%2Ftags%2F&peg=1748)):
 
 ```
 Version 5.0.3, SVN r1748, tags/ASM_5_0_3
