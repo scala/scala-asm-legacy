@@ -22,14 +22,16 @@ This makes it easy to see how our fork differs from the official release.
 The current sources are based on the following version of ASM ([browse tags here](http://websvn.ow2.org/listing.php?repname=asm&path=%2Ftags%2F&peg=1748)):
 
 ```
-Version 5.0.3, SVN r1748, tags/ASM_5_0_3
+Version 5.0.4, SVN r1779, tags/ASM_5_0_4
 ```
+
+Previous ASM Upgrade PR: https://github.com/scala/scala-asm/pull/5
 
 ## Upgrading ASM
 
 Start by deleting all source files and copy the ones from the latest ASM release.
 
-The original ASM sources are in an SVN repository, which is mirrored here: https://github.com/lrytz/asm.
+The original ASM sources are in an [SVN repository](http://forge.ow2.org/plugins/scmsvn/index.php?group_id=23), which is mirrored here: https://github.com/lrytz/asm.
 You can use this mirror, your own git-svn mirror, or the original SVN repository to grab the sources of a new ASM version.
 A description how to work with the git-svn clone is here: https://github.com/lrytz/asm/issues/1.
 
@@ -39,27 +41,24 @@ Excluded Files (don't copy):
   * `org/objectweb/asm/optimizer`
   * `org/objectweb/asm/xml`
 
-*The below will change once a first is done in the new `scala/scala-asm` repository.*
-*In the new repository, it probably makes sense to only squash the "Re-packaging and cosmetic changes".*
-*The "actual changes" can then stay in the commit history.*
+Take a look at the previous PR that upgraded ASM [(see above)](#current-version).
+Follow the upgrade procedure in the same way.
 
-Check the commit history of `src/asm`: https://github.com/scala/scala/commits/2.11.x/src/asm.
-Find the previous commit that upgraded ASM and take a look at its commit message.
-It should be a squashed version of a pull request that shows the precise procedure how the last upgrade was made.
-
-Re-packaging and cosmetic changes:
+The re-packaging and cleanup commits can be applied using the following commands:
   * convert line endings (there are some `CRLF`)  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs dos2unix`
+    `find src -name '*.java' | xargs dos2unix`
   * change package clauses  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs sed -i '' -e 's/package org\.objectweb\.asm/package scala.tools.asm/'`
+    `find src -name '*.java' | xargs sed -i '' -e 's/package org\.objectweb\.asm/package scala.tools.asm/'`
   * update imports  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs sed -i '' -e 's/import org\.objectweb\.asm/import scala.tools.asm/'`
+    `find src -name '*.java' | xargs sed -i '' -e 's/import org\.objectweb\.asm/import scala.tools.asm/'`
   * update `@links`, `@associates`  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs sed -i '' -e 's/@link org\.objectweb\.asm/@link scala.tools.asm/'`  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs sed -i '' -e 's/@associates org\.objectweb\.asm/@associates scala.tools.asm/'`
+    `find src -name '*.java' | xargs sed -i '' -e 's/@link org\.objectweb\.asm/@link scala.tools.asm/'`  
+    `find src -name '*.java' | xargs sed -i '' -e 's/@associates org\.objectweb\.asm/@associates scala.tools.asm/'`
   * remove trailing whitespace  
-    `find src/asm/scala/tools/asm -name '*.java' | xargs sed -i '' -e 's/[ ]*$//'`
+    `find src -name '*.java' | xargs sed -i '' -e 's/[ ]*$//'`
 
-Include the actual changes that we have in our repostiory
-  * Include the commits labelled `[asm-cherry-pick]` in the non-squashed PR of the previous upgrade
-  * Include the changes that were added to src/asm since the last upgrade and label them `[asm-cherry-pick]`
+Cherry-pick the actual changes that we have in our fork:
+  * Include the commits labelled `[asm-cherry-pick]` in the previous upgrade PR
+  * Include the changes to `src` that were added since the last upgrade, and label them `[asm-cherry-pick]`
+
+Update the ["Current Version"](#current-version) section of this README.
