@@ -2,7 +2,9 @@ scalaModuleSettings
 
 name := "scala-asm"
 
-version := "5.0.3-scala-3"
+enablePlugins(GitVersioning)
+
+git.useGitDescribe := true
 
 // Otherwise the artifact has a dependency on scala-library
 autoScalaLibrary := false
