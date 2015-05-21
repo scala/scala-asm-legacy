@@ -4,7 +4,7 @@ name := "scala-asm"
 
 enablePlugins(GitVersioning)
 git.useGitDescribe := true
-version := version.value drop 1 // drop the `v` from the `git describe` string
+git.gitDescribedVersion := git.gitDescribedVersion.value.map(_ drop 1) // drop the `v` from the `git describe` string, https://github.com/sbt/sbt-git/issues/67
 
 // Otherwise the artifact has a dependency on scala-library
 autoScalaLibrary := false
