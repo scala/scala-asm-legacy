@@ -3,8 +3,8 @@ scalaModuleSettings
 name := "scala-asm"
 
 enablePlugins(GitVersioning)
-
 git.useGitDescribe := true
+version := version.value drop 1 // drop the `v` from the `git describe` string
 
 // Otherwise the artifact has a dependency on scala-library
 autoScalaLibrary := false
