@@ -27,21 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package scala.tools.asm.util;
+package org.objectweb.asm.util;
 
-import scala.tools.asm.Opcodes;
-import scala.tools.asm.signature.SignatureVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} that prints a disassembled view of the signature
  * it visits.
- *
+ * 
  * @author Eugene Kuleshov
  * @author Eric Bruneton
  */
 public final class TraceSignatureVisitor extends SignatureVisitor {
 
-    private final StringBuffer declaration;
+    private final StringBuilder declaration;
 
     private boolean isInterface;
 
@@ -53,9 +53,9 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
 
     private boolean seenInterface;
 
-    private StringBuffer returnType;
+    private StringBuilder returnType;
 
-    private StringBuffer exceptions;
+    private StringBuilder exceptions;
 
     /**
      * Stack used to keep track of class types that have arguments. Each element
@@ -77,10 +77,10 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
     public TraceSignatureVisitor(final int access) {
         super(Opcodes.ASM5);
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
-        this.declaration = new StringBuffer();
+        this.declaration = new StringBuilder();
     }
 
-    private TraceSignatureVisitor(final StringBuffer buf) {
+    private TraceSignatureVisitor(final StringBuilder buf) {
         super(Opcodes.ASM5);
         this.declaration = buf;
     }
@@ -146,14 +146,14 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
             declaration.append('(');
         }
         declaration.append(')');
-        returnType = new StringBuffer();
+        returnType = new StringBuilder();
         return new TraceSignatureVisitor(returnType);
     }
 
     @Override
     public SignatureVisitor visitExceptionType() {
         if (exceptions == null) {
-            exceptions = new StringBuffer();
+            exceptions = new StringBuilder();
         } else {
             exceptions.append(", ");
         }

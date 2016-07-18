@@ -27,33 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package scala.tools.asm.tree.analysis;
+package org.objectweb.asm.tree.analysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import scala.tools.asm.Opcodes;
-import scala.tools.asm.Type;
-import scala.tools.asm.tree.AbstractInsnNode;
-import scala.tools.asm.tree.IincInsnNode;
-import scala.tools.asm.tree.InsnList;
-import scala.tools.asm.tree.JumpInsnNode;
-import scala.tools.asm.tree.LabelNode;
-import scala.tools.asm.tree.LookupSwitchInsnNode;
-import scala.tools.asm.tree.MethodNode;
-import scala.tools.asm.tree.TableSwitchInsnNode;
-import scala.tools.asm.tree.TryCatchBlockNode;
-import scala.tools.asm.tree.VarInsnNode;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.IincInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * A semantic bytecode analyzer. <i>This class does not fully check that JSR and
  * RET instructions are valid.</i>
- *
+ * 
  * @param <V>
  *            type of the Value used for the analysis.
- *
+ * 
  * @author Eric Bruneton
  */
 public class Analyzer<V extends Value> implements Opcodes {
@@ -78,7 +78,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Constructs a new {@link Analyzer}.
-     *
+     * 
      * @param interpreter
      *            the interpreter to be used to symbolically interpret the
      *            bytecode instructions.
@@ -89,7 +89,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Analyzes the given method.
-     *
+     * 
      * @param owner
      *            the internal name of the class to which the method belongs.
      * @param m
@@ -158,26 +158,21 @@ public class Analyzer<V extends Value> implements Opcodes {
         // initializes the data structures for the control flow analysis
         Frame<V> current = newFrame(m.maxLocals, m.maxStack);
         Frame<V> handler = newFrame(m.maxLocals, m.maxStack);
-        current.setReturn(interpreter.newReturnTypeValue(Type.getReturnType(m.desc)));
+        current.setReturn(interpreter.newValue(Type.getReturnType(m.desc)));
         Type[] args = Type.getArgumentTypes(m.desc);
         int local = 0;
-        boolean isInstanceMethod = (m.access & ACC_STATIC) == 0;
-        if (isInstanceMethod) {
+        if ((m.access & ACC_STATIC) == 0) {
             Type ctype = Type.getObjectType(owner);
-            current.setLocal(local, interpreter.newParameterValue(isInstanceMethod, local, ctype));
-            local++;
+            current.setLocal(local++, interpreter.newValue(ctype));
         }
         for (int i = 0; i < args.length; ++i) {
-            current.setLocal(local, interpreter.newParameterValue(isInstanceMethod, local, args[i]));
-            local++;
+            current.setLocal(local++, interpreter.newValue(args[i]));
             if (args[i].getSize() == 2) {
-                current.setLocal(local, interpreter.newEmptyValueAfterSize2Local(local));
-                local++;
+                current.setLocal(local++, interpreter.newValue(null));
             }
         }
         while (local < m.maxLocals) {
-            current.setLocal(local, interpreter.newEmptyNonParameterLocalValue(local));
-            local++;
+            current.setLocal(local++, interpreter.newValue(null));
         }
         merge(0, current, null);
 
@@ -290,7 +285,7 @@ public class Analyzer<V extends Value> implements Opcodes {
                         if (newControlFlowExceptionEdge(insn, tcb)) {
                             handler.init(f);
                             handler.clearStack();
-                            handler.push(interpreter.newExceptionValue(tcb, handler, type));
+                            handler.push(interpreter.newValue(type));
                             merge(jump, handler, subroutine);
                         }
                     }
@@ -376,12 +371,12 @@ public class Analyzer<V extends Value> implements Opcodes {
     /**
      * Returns the symbolic stack frame for each instruction of the last
      * recently analyzed method.
-     *
+     * 
      * @return the symbolic state of the execution stack frame at each bytecode
      *         instruction of the method. The size of the returned array is
      *         equal to the number of instructions (and labels) of the method. A
      *         given frame is <tt>null</tt> if the corresponding instruction
-     *         cannot be reached, or if an error occurred during the analysis of
+     *         cannot be reached, or if an error occured during the analysis of
      *         the method.
      */
     public Frame<V>[] getFrames() {
@@ -390,7 +385,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Returns the exception handlers for the given instruction.
-     *
+     * 
      * @param insn
      *            the index of an instruction of the last recently analyzed
      *            method.
@@ -404,7 +399,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * Initializes this analyzer. This method is called just before the
      * execution of control flow analysis loop in #analyze. The default
      * implementation of this method does nothing.
-     *
+     * 
      * @param owner
      *            the internal name of the class to which the method belongs.
      * @param m
@@ -417,7 +412,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Constructs a new frame with the given size.
-     *
+     * 
      * @param nLocals
      *            the maximum number of local variables of the frame.
      * @param nStack
@@ -430,7 +425,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Constructs a new frame that is identical to the given frame.
-     *
+     * 
      * @param src
      *            a frame.
      * @return the created frame.
@@ -441,10 +436,10 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     /**
      * Creates a control flow graph edge. The default implementation of this
-     * method does nothing. It can be overridden in order to construct the
+     * method does nothing. It can be overriden in order to construct the
      * control flow graph of a method (this method is called by the
      * {@link #analyze analyze} method during its visit of the method's code).
-     *
+     * 
      * @param insn
      *            an instruction index.
      * @param successor
@@ -459,7 +454,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * overridden in order to construct the control flow graph of a method (this
      * method is called by the {@link #analyze analyze} method during its visit
      * of the method's code).
-     *
+     * 
      * @param insn
      *            an instruction index.
      * @param successor
@@ -481,7 +476,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * construct the control flow graph of a method (this method is called by
      * the {@link #analyze analyze} method during its visit of the method's
      * code).
-     *
+     * 
      * @param insn
      *            an instruction index.
      * @param tcb

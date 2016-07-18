@@ -27,29 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package scala.tools.asm.tree.analysis;
+package org.objectweb.asm.tree.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import scala.tools.asm.Opcodes;
-import scala.tools.asm.Type;
-import scala.tools.asm.tree.AbstractInsnNode;
-import scala.tools.asm.tree.IincInsnNode;
-import scala.tools.asm.tree.InvokeDynamicInsnNode;
-import scala.tools.asm.tree.MethodInsnNode;
-import scala.tools.asm.tree.MultiANewArrayInsnNode;
-import scala.tools.asm.tree.VarInsnNode;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.IincInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * A symbolic execution stack frame. A stack frame contains a set of local
  * variable slots, and an operand stack. Warning: long and double values are
  * represented by <i>two</i> slots in local variables, and by <i>one</i> slot in
  * the operand stack.
- *
+ * 
  * @param <V>
  *            type of the Value used for the analysis.
- *
+ * 
  * @author Eric Bruneton
  */
 public class Frame<V extends Value> {
@@ -77,7 +77,7 @@ public class Frame<V extends Value> {
 
     /**
      * Constructs a new frame with the given size.
-     *
+     * 
      * @param nLocals
      *            the maximum number of local variables of the frame.
      * @param nStack
@@ -91,7 +91,7 @@ public class Frame<V extends Value> {
 
     /**
      * Constructs a new frame that is identical to the given frame.
-     *
+     * 
      * @param src
      *            a frame.
      */
@@ -102,7 +102,7 @@ public class Frame<V extends Value> {
 
     /**
      * Copies the state of the given frame into this frame.
-     *
+     * 
      * @param src
      *            a frame.
      * @return this frame.
@@ -116,7 +116,7 @@ public class Frame<V extends Value> {
 
     /**
      * Sets the expected return type of the analyzed method.
-     *
+     * 
      * @param v
      *            the expected return type of the analyzed method, or
      *            <tt>null</tt> if the method returns void.
@@ -127,7 +127,7 @@ public class Frame<V extends Value> {
 
     /**
      * Returns the maximum number of local variables of this frame.
-     *
+     * 
      * @return the maximum number of local variables of this frame.
      */
     public int getLocals() {
@@ -136,16 +136,16 @@ public class Frame<V extends Value> {
 
     /**
      * Returns the maximum stack size of this frame.
-     *
+     * 
      * @return the maximum stack size of this frame.
      */
     public int getMaxStackSize() {
         return values.length - locals;
     }
-
+    
     /**
      * Returns the value of the given local variable.
-     *
+     * 
      * @param i
      *            a local variable index.
      * @return the value of the given local variable.
@@ -162,7 +162,7 @@ public class Frame<V extends Value> {
 
     /**
      * Sets the value of the given local variable.
-     *
+     * 
      * @param i
      *            a local variable index.
      * @param value
@@ -182,7 +182,7 @@ public class Frame<V extends Value> {
     /**
      * Returns the number of values in the operand stack of this frame. Long and
      * double values are treated as single values.
-     *
+     * 
      * @return the number of values in the operand stack of this frame.
      */
     public int getStackSize() {
@@ -191,7 +191,7 @@ public class Frame<V extends Value> {
 
     /**
      * Returns the value of the given operand stack slot.
-     *
+     * 
      * @param i
      *            the index of an operand stack slot.
      * @return the value of the given operand stack slot.
@@ -203,20 +203,6 @@ public class Frame<V extends Value> {
     }
 
     /**
-     * Sets the value of the given stack slot.
-     *
-     * @param i
-     *   the index of an operand stack slot.
-     * @param value
-     *   the new value of the stack slot.
-     * @throws IndexOutOfBoundsException
-     *   if the stack slot does not exist.
-     */
-    public void setStack(final int i, final V value) throws IndexOutOfBoundsException {
-        values[i + locals] = value;
-    }
-
-    /**
      * Clears the operand stack of this frame.
      */
     public void clearStack() {
@@ -225,7 +211,7 @@ public class Frame<V extends Value> {
 
     /**
      * Pops a value from the operand stack of this frame.
-     *
+     * 
      * @return the value that has been popped from the stack.
      * @throws IndexOutOfBoundsException
      *             if the operand stack is empty.
@@ -240,7 +226,7 @@ public class Frame<V extends Value> {
 
     /**
      * Pushes a value into the operand stack of this frame.
-     *
+     * 
      * @param value
      *            the value that must be pushed into the stack.
      * @throws IndexOutOfBoundsException
@@ -312,12 +298,12 @@ public class Frame<V extends Value> {
             var = ((VarInsnNode) insn).var;
             setLocal(var, value1);
             if (value1.getSize() == 2) {
-                setLocal(var + 1, interpreter.newEmptyValueAfterSize2Local(var + 1));
+                setLocal(var + 1, interpreter.newValue(null));
             }
             if (var > 0) {
                 Value local = getLocal(var - 1);
                 if (local != null && local.getSize() == 2) {
-                    setLocal(var - 1, interpreter.newEmptyValueForPreviousSize2Local(var - 1));
+                    setLocal(var - 1, interpreter.newValue(null));
                 }
             }
             break;
@@ -351,7 +337,7 @@ public class Frame<V extends Value> {
             if (value1.getSize() != 1) {
                 throw new AnalyzerException(insn, "Illegal use of DUP");
             }
-            push(interpreter.copyOperation(insn, value1));
+            push(value1);
             push(interpreter.copyOperation(insn, value1));
             break;
         case Opcodes.DUP_X1:
@@ -361,8 +347,8 @@ public class Frame<V extends Value> {
                 throw new AnalyzerException(insn, "Illegal use of DUP_X1");
             }
             push(interpreter.copyOperation(insn, value1));
-            push(interpreter.copyOperation(insn, value2));
-            push(interpreter.copyOperation(insn, value1));
+            push(value2);
+            push(value1);
             break;
         case Opcodes.DUP_X2:
             value1 = pop();
@@ -372,15 +358,15 @@ public class Frame<V extends Value> {
                     value3 = pop();
                     if (value3.getSize() == 1) {
                         push(interpreter.copyOperation(insn, value1));
-                        push(interpreter.copyOperation(insn, value3));
-                        push(interpreter.copyOperation(insn, value2));
-                        push(interpreter.copyOperation(insn, value1));
+                        push(value3);
+                        push(value2);
+                        push(value1);
                         break;
                     }
                 } else {
                     push(interpreter.copyOperation(insn, value1));
-                    push(interpreter.copyOperation(insn, value2));
-                    push(interpreter.copyOperation(insn, value1));
+                    push(value2);
+                    push(value1);
                     break;
                 }
             }
@@ -390,14 +376,14 @@ public class Frame<V extends Value> {
             if (value1.getSize() == 1) {
                 value2 = pop();
                 if (value2.getSize() == 1) {
-                    push(interpreter.copyOperation(insn, value2));
-                    push(interpreter.copyOperation(insn, value1));
+                    push(value2);
+                    push(value1);
                     push(interpreter.copyOperation(insn, value2));
                     push(interpreter.copyOperation(insn, value1));
                     break;
                 }
             } else {
-                push(interpreter.copyOperation(insn, value1));
+                push(value1);
                 push(interpreter.copyOperation(insn, value1));
                 break;
             }
@@ -411,9 +397,9 @@ public class Frame<V extends Value> {
                     if (value3.getSize() == 1) {
                         push(interpreter.copyOperation(insn, value2));
                         push(interpreter.copyOperation(insn, value1));
-                        push(interpreter.copyOperation(insn, value3));
-                        push(interpreter.copyOperation(insn, value2));
-                        push(interpreter.copyOperation(insn, value1));
+                        push(value3);
+                        push(value2);
+                        push(value1);
                         break;
                     }
                 }
@@ -421,8 +407,8 @@ public class Frame<V extends Value> {
                 value2 = pop();
                 if (value2.getSize() == 1) {
                     push(interpreter.copyOperation(insn, value1));
-                    push(interpreter.copyOperation(insn, value2));
-                    push(interpreter.copyOperation(insn, value1));
+                    push(value2);
+                    push(value1);
                     break;
                 }
             }
@@ -438,18 +424,18 @@ public class Frame<V extends Value> {
                         if (value4.getSize() == 1) {
                             push(interpreter.copyOperation(insn, value2));
                             push(interpreter.copyOperation(insn, value1));
-                            push(interpreter.copyOperation(insn, value4));
-                            push(interpreter.copyOperation(insn, value3));
-                            push(interpreter.copyOperation(insn, value2));
-                            push(interpreter.copyOperation(insn, value1));
+                            push(value4);
+                            push(value3);
+                            push(value2);
+                            push(value1);
                             break;
                         }
                     } else {
                         push(interpreter.copyOperation(insn, value2));
                         push(interpreter.copyOperation(insn, value1));
-                        push(interpreter.copyOperation(insn, value3));
-                        push(interpreter.copyOperation(insn, value2));
-                        push(interpreter.copyOperation(insn, value1));
+                        push(value3);
+                        push(value2);
+                        push(value1);
                         break;
                     }
                 }
@@ -459,15 +445,15 @@ public class Frame<V extends Value> {
                     value3 = pop();
                     if (value3.getSize() == 1) {
                         push(interpreter.copyOperation(insn, value1));
-                        push(interpreter.copyOperation(insn, value3));
-                        push(interpreter.copyOperation(insn, value2));
-                        push(interpreter.copyOperation(insn, value1));
+                        push(value3);
+                        push(value2);
+                        push(value1);
                         break;
                     }
                 } else {
                     push(interpreter.copyOperation(insn, value1));
-                    push(interpreter.copyOperation(insn, value2));
-                    push(interpreter.copyOperation(insn, value1));
+                    push(value2);
+                    push(value1);
                     break;
                 }
             }
@@ -685,7 +671,7 @@ public class Frame<V extends Value> {
 
     /**
      * Merges this frame with the given frame.
-     *
+     * 
      * @param frame
      *            a frame.
      * @param interpreter
@@ -713,7 +699,7 @@ public class Frame<V extends Value> {
 
     /**
      * Merges this frame with the given frame (case of a RET instruction).
-     *
+     * 
      * @param frame
      *            a frame
      * @param access
@@ -735,7 +721,7 @@ public class Frame<V extends Value> {
 
     /**
      * Returns a string representation of this frame.
-     *
+     * 
      * @return a string representation of this frame.
      */
     @Override
