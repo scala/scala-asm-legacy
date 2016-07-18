@@ -19,10 +19,10 @@ This makes it easy to see how our fork differs from the official release.
 
 ## Current Version
 
-The current sources are based on the following version of ASM ([browse tags here](http://websvn.ow2.org/listing.php?repname=asm&path=%2Ftags%2F&peg=1748)):
+The current sources are based on the following version of ASM ([browse tags here](http://websvn.ow2.org/listing.php?repname=asm&path=%2Ftags%2F)):
 
 ```
-Version 5.0.4, SVN r1779, tags/ASM_5_0_4
+Version 5.1, SVN r1798, tags/ASM_5_1
 ```
 
 Previous ASM Upgrade PR: https://github.com/scala/scala-asm/pull/5
