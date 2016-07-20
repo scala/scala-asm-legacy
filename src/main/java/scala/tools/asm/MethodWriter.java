@@ -2040,7 +2040,7 @@ public class MethodWriter extends MethodVisitor {
         }
         int size = 8;
         if (code.length > 0) {
-            if (code.length > 65536) {
+            if (code.length > 65535) {
                 String nameString = "";
                 Item nameItem = cw.findItemByIndex(name);
                 if (nameItem != null) nameString = nameItem.strVal1 +"'s ";
