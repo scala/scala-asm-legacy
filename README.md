@@ -25,7 +25,7 @@ The current sources are based on the following version of ASM ([browse tags here
 Version 5.1, SVN r1798, tags/ASM_5_1
 ```
 
-Previous ASM Upgrade PR: https://github.com/scala/scala-asm/pull/5
+Previous ASM Upgrade PR: https://github.com/scala/scala-asm/pull/11
 
 ## Upgrading ASM
 
