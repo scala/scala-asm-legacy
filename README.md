@@ -31,9 +31,9 @@ Previous ASM Upgrade PR: https://github.com/scala/scala-asm/pull/11
 
 Start by deleting all source files and copy the ones from the latest ASM release.
 
-The original ASM sources are in an [SVN repository](http://forge.ow2.org/plugins/scmsvn/index.php?group_id=23), which is mirrored here: https://github.com/lrytz/asm.
+The original ASM sources are in an [SVN repository](http://forge.ow2.org/plugins/scmsvn/index.php?group_id=23), which is mirrored here: https://github.com/lrytz/asm-legacy-svn-clone.
 You can use this mirror, your own git-svn mirror, or the original SVN repository to grab the sources of a new ASM version.
-A description how to work with the git-svn clone is here: https://github.com/lrytz/asm/issues/1.
+A description how to work with the git-svn clone is here: https://github.com/lrytz/asm-legacy-svn-clone/issues/1.
 
 Excluded Files (don't copy):
   * `package.html` files
