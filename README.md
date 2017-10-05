@@ -1,3 +1,7 @@
+# NO LONGER IN USE
+
+This is a legacy repo, check https://github.com/scala/scala-asm for the current one.
+
 # A fork of ASM for the Scala Compiler
 
 [<img src="https://img.shields.io/travis/scala/scala-asm.svg"/>](https://travis-ci.org/scala/scala-asm)
